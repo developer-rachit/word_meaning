@@ -37,35 +37,54 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Your Favourite Words!'),
       ),
-      body: Center(
-        child: FutureBuilder<List<Words>>(
-            future: DatabaseHelper.instance.getWords(),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Words>> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text('Loading...'),
-                );
-              }
-              return snapshot.data!.isEmpty
-                  ? const Center(child: Text('No Words in List.'))
-                  : ListView(
-                      children: snapshot.data!.map((words) {
-                        return Center(
-                          child: ListTile(
-                            title: Text(words.meaning),
-                            subtitle: Text(words.word),
-                            onLongPress: () {
-                              setState(() {
-                                DatabaseHelper.instance.remove(words.id!);
-                              });
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    );
-            }),
-      ),
+      body: FutureBuilder<List<Words>>(
+          future: DatabaseHelper.instance.getWords(),
+          builder: (BuildContext context, AsyncSnapshot<List<Words>> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('Loading...'),
+              );
+            }
+            return snapshot.data!.isEmpty
+                ? const Center(child: Text('No Words in List.'))
+                : ListView(
+                    children: snapshot.data!.map((words) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              color: Colors.blue,
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                words.meaning,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              color: Color.fromARGB(255, 116, 189, 248),
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                words.word,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+          }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {

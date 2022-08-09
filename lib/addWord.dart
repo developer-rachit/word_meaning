@@ -98,7 +98,7 @@ class _AddWordState extends State<AddWord> {
               stream: _stream,
               builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
-                  return const Center(child: Text("Enter a word to search"));
+                  return const Center(child: Text(""));
                 }
 
                 if (snapshot.data == "waiting") {
@@ -107,26 +107,41 @@ class _AddWordState extends State<AddWord> {
                   );
                 }
 
-                meaning = Text(snapshot.data["definitions"][0]["definition"])
-                    .toString();
+                meaning = snapshot.data["definitions"][0]["definition"];
 
-                return Text(snapshot.data["definitions"][0]["definition"]);
+                return Text(
+                  snapshot.data["definitions"][0]["definition"],
+                  style: TextStyle(
+                    fontSize: 16,
+                    decoration: TextDecoration.underline,
+                  ),
+                );
               },
             ),
           ),
+          ElevatedButton(
+              onPressed: () async {
+                await DatabaseHelper.instance.add(
+                  Words(
+                    word: word.text,
+                    meaning: meaning,
+                  ),
+                );
+              },
+              child: Text('Add Word'))
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.save),
-        onPressed: () async {
-          await DatabaseHelper.instance.add(
-            Words(
-              word: word.text,
-              meaning: meaning,
-            ),
-          );
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.save),
+      //   onPressed: () async {
+      //     await DatabaseHelper.instance.add(
+      //       Words(
+      //         word: word.text,
+      //         meaning: meaning,
+      //       ),
+      //     );
+      //   },
+      // ),
     );
   }
 }
